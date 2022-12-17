@@ -1,20 +1,21 @@
 package Products;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-public class Product extends HashMap {
-    private String nameProducts;
+public class Product {
+    private final String nameProducts;
     private int price;
     private int num;
-    static public Set<Product> productsSet = new HashSet<>();
+    private boolean check;
 
     public Product(String nameProducts, int price, int num) {
+        if (nameProducts == null || nameProducts.isEmpty() || price <= 0 || num <= 0) {
+            throw new IllegalArgumentException("Введите корректные данные");
+        }
         this.nameProducts = nameProducts;
         this.price = price;
         this.num = num;
+        this.check = false;
     }
 
     public String getNameProducts() {
@@ -25,16 +26,24 @@ public class Product extends HashMap {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public int getNum() {
         return num;
     }
 
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public void setNum(int num) {
         this.num = num;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
     }
 
     @Override
@@ -42,31 +51,19 @@ public class Product extends HashMap {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-
-        boolean ComparisonOfNames = nameProducts.equals(product.nameProducts);
-        return ComparisonOfNames;
+        return price == product.price && num == product.num && check == product.check && Objects.equals(nameProducts, product.nameProducts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nameProducts);
+        return Objects.hash(nameProducts, price, num, check);
     }
 
     @Override
     public String toString() {
-        return nameProducts + ", цена " + price + ", кол-во " + num;
-    }
-
-    static void addHashSet(Product product) {
-        if (productsSet.size() == 0) {
-            productsSet.add(product);
-        } else {
-            for (Product products : productsSet) {
-                if (products.hashCode() == product.hashCode()) {
-                    throw new IllegalArgumentException("Повторяющий элемент");
-                }
-            }
-        }
-        productsSet.add(product);
+        return nameProducts + '\'' +
+                ", цена=" + price + " р." +
+                ", количество=" + num +
+                ", товар куплен=" + check;
     }
 }
